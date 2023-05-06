@@ -289,7 +289,7 @@ for branch in ${BRANCH_NAME//,/ }; do
     # shellcheck source=/dev/null
     source build/envsetup.sh > /dev/null
     set -eu
-
+    
     if [ -f /root/userscripts/before.sh ]; then
       echo ">> [$(date)] Running before.sh"
       /root/userscripts/before.sh || echo ">> [$(date)] Warning: before.sh failed!"
@@ -340,6 +340,12 @@ for branch in ${BRANCH_NAME//,/ }; do
           /root/userscripts/pre-build.sh "$codename" &>> "$DEBUG_LOG" || echo ">> [$(date)] Warning: pre-build.sh failed!"
         fi
 
+        set +eu
+        echo "Running AOSProot patch script.............................................................................................................."
+        m aosproot
+        aosproot patch_code
+        echo "AOSProot patching finished................................................................................................................."
+        set -eu
         # Start the build
         echo ">> [$(date)] Starting build for $codename, $branch branch" | tee -a "$DEBUG_LOG"
         build_successful=false
