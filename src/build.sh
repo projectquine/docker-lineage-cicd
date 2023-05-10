@@ -341,11 +341,18 @@ for branch in ${BRANCH_NAME//,/ }; do
         fi
 
         set +eu
-        echo "Running AOSProot patch script.............................................................................................................."
-        m aosproot
-        aosproot patch_code
-        echo "AOSProot patching finished................................................................................................................."
+
+        if [ -d "vendor/aosproot" ]; then
+            echo "Running AOSProot patch script.............................................................................................................."
+            m aosproot
+            aosproot patch_code
+            echo "AOSProot patching finished................................................................................................................."
+        else
+            echo "vendor/aosproot does not exist. Skipping AOSProot patch script."
+        fi
+
         set -eu
+
         # Start the build
         echo ">> [$(date)] Starting build for $codename, $branch branch" | tee -a "$DEBUG_LOG"
         build_successful=false
